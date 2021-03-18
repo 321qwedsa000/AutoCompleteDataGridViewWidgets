@@ -19,6 +19,7 @@ namespace AutoCompleteDataGridViewWidgets
         {
             InitializeComponent();
             keyValueGridView.Width = Math.Min(mainDataGridView.Width,keyValueWidth);
+            
         }
 
         private void keyValueGridView_VisibleChanged(object sender, EventArgs e)
@@ -43,6 +44,7 @@ namespace AutoCompleteDataGridViewWidgets
 
         private void mainDataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
+            mainDataGridView.EditMode = DataGridViewEditMode.EditOnEnter;
             //debug Information
             Debug.WriteLine($"{MethodBase.GetCurrentMethod().Name},row={mainDataGridView.CurrentCell?.RowIndex},column={mainDataGridView.CurrentCell?.ColumnIndex}");
             //debug Information
@@ -83,6 +85,7 @@ namespace AutoCompleteDataGridViewWidgets
             } else
             {
                 mainDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                mainDataGridView.EditMode = DataGridViewEditMode.EditOnKeystroke;
             }
         }
 
@@ -93,6 +96,12 @@ namespace AutoCompleteDataGridViewWidgets
             //debug Information
             if(mainDataGridView.CurrentCell != null)
                 changed = true;
+        }
+
+        private void mainDataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            if (MessageBox.Show($"您確定要刪除第{e.Row.Index+1}列資料嗎？", "詢問", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                e.Cancel = true;
         }
     }
 }

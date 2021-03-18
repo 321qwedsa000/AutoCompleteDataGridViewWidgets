@@ -55,6 +55,7 @@
             this.Column1,
             this.Column2});
             this.mainDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainDataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.mainDataGridView.Location = new System.Drawing.Point(0, 0);
             this.mainDataGridView.Name = "mainDataGridView";
             this.mainDataGridView.RowTemplate.Height = 24;
@@ -63,6 +64,7 @@
             this.mainDataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.mainDataGridView_CellValueChanged);
             this.mainDataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.mainDataGridView_EditingControlShowing);
             this.mainDataGridView.SelectionChanged += new System.EventHandler(this.mainDataGridView_SelectionChanged);
+            this.mainDataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.mainDataGridView_UserDeletingRow);
             // 
             // Column
             // 
@@ -84,6 +86,7 @@
             // 
             // keyValueGridView
             // 
+            this.keyValueGridView.BackgroundColor = System.Drawing.Color.White;
             this.keyValueGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.keyValueGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column3,
@@ -91,6 +94,7 @@
             this.Column5});
             this.keyValueGridView.Location = new System.Drawing.Point(40, 56);
             this.keyValueGridView.Name = "keyValueGridView";
+            this.keyValueGridView.ReadOnly = true;
             this.keyValueGridView.RowTemplate.Height = 24;
             this.keyValueGridView.Size = new System.Drawing.Size(345, 150);
             this.keyValueGridView.TabIndex = 1;
@@ -100,16 +104,19 @@
             // 
             this.Column3.HeaderText = "Column3";
             this.Column3.Name = "Column3";
+            this.Column3.ReadOnly = true;
             // 
             // Column4
             // 
             this.Column4.HeaderText = "Column4";
             this.Column4.Name = "Column4";
+            this.Column4.ReadOnly = true;
             // 
             // Column5
             // 
             this.Column5.HeaderText = "Column5";
             this.Column5.Name = "Column5";
+            this.Column5.ReadOnly = true;
             // 
             // AutoCompleteDataGridView
             // 
