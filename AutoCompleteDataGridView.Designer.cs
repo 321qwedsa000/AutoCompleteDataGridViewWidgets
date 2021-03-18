@@ -45,6 +45,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.keyValueGridView)).BeginInit();
             this.SuspendLayout();
             // 
+            // dataBindingSource
+            // 
+            this.dataBindingSource.DataSourceChanged += new System.EventHandler(this.dataBindingSource_DataSourceChanged);
+            // 
+            // keyBindingSource
+            // 
+            this.keyBindingSource.DataSourceChanged += new System.EventHandler(this.keyBindingSource_DataSourceChanged);
+            // 
             // mainDataGridView
             // 
             this.mainDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
@@ -139,11 +147,10 @@
         public int keyValueHeightScale { get; set; } = 5;
         public int keyValueWidth { get; set; } = 500;
 #endregion
-
-        private System.Windows.Forms.BindingSource dataBindingSource;
-        private System.Windows.Forms.BindingSource keyBindingSource;
         private System.Windows.Forms.DataGridView mainDataGridView;
         private System.Windows.Forms.DataGridView keyValueGridView;
+        public System.Windows.Forms.BindingSource dataBindingSource;
+        public System.Windows.Forms.BindingSource keyBindingSource;
 #if DEBUG
         private System.Windows.Forms.DataGridViewTextBoxColumn Column;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
@@ -151,6 +158,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
+        
 #endif
     }
 }

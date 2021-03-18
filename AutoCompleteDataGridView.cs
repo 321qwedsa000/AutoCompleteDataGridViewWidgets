@@ -15,11 +15,11 @@ namespace AutoCompleteDataGridViewWidgets
     public partial class AutoCompleteDataGridView : UserControl
     {
         private bool changed { get; set; } = false;
+        private bool first_time { get; set; } = true;
         public AutoCompleteDataGridView()
         {
             InitializeComponent();
             keyValueGridView.Width = Math.Min(mainDataGridView.Width,keyValueWidth);
-            
         }
 
         private void keyValueGridView_VisibleChanged(object sender, EventArgs e)
@@ -44,7 +44,7 @@ namespace AutoCompleteDataGridViewWidgets
 
         private void mainDataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            mainDataGridView.EditMode = DataGridViewEditMode.EditOnEnter;
+            
             //debug Information
             Debug.WriteLine($"{MethodBase.GetCurrentMethod().Name},row={mainDataGridView.CurrentCell?.RowIndex},column={mainDataGridView.CurrentCell?.ColumnIndex}");
             //debug Information
@@ -52,6 +52,13 @@ namespace AutoCompleteDataGridViewWidgets
             {
                 if (!(e.Control is DataGridViewTextBoxEditingControl)) throw new Exception("Primary Key Column's control must be TextBox");
                 var textBox = e.Control as DataGridViewTextBoxEditingControl;
+                if (textBox != null)
+                {
+                    textBox.KeyPress -= TextBox_KeyPress;
+                    textBox.TextChanged -= TextBox_TextChanged;
+                    textBox.TextChanged += TextBox_TextChanged;
+                    textBox.KeyPress += TextBox_KeyPress;
+                }
                 keyValueGridView.Visible = true;
                 keyValueGridView.Height = keyValueHeightScale * textBox.Height;
             } else
@@ -60,14 +67,39 @@ namespace AutoCompleteDataGridViewWidgets
             }
         }
 
+
+        private void TextBox_TextChanged(object sender, EventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            var filterView = (DataTable)keyValueGridView.DataSource;
+            var view = filterView?.DefaultView;
+            if (view == null) return;
+            view.Sort = "Column3 asc";
+            view.RowFilter = $"Column3 like '%{textBox.Text}%'";
+            keyValueGridView.DataSource = view.ToTable();
+        }
+
+        private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Debug.WriteLine(e.KeyChar);
+            
+        }
+
         private void mainDataGridView_SelectionChanged(object sender, EventArgs e)
         {
+            mainDataGridView.EndEdit();
+            //debug Information
+            Debug.WriteLine($"{MethodBase.GetCurrentMethod().Name},row={mainDataGridView.CurrentCell?.RowIndex},column={mainDataGridView.CurrentCell?.ColumnIndex}");
+            //debug Information
             keyValueGridView.Visible = false;
+            if(first_time)
+            {
+                first_time = false;
+                return;
+            }
             if(changed)
             {
-                //debug Information
-                Debug.WriteLine($"{MethodBase.GetCurrentMethod().Name},row={mainDataGridView.RowCount},column={mainDataGridView.ColumnCount}");
-                //debug Information
+                mainDataGridView.EditMode = DataGridViewEditMode.EditOnEnter;
                 var cur_ = mainDataGridView.CurrentCell;
                 var rowIndex = mainDataGridView.RowCount;
                 var colIndex = mainDataGridView.ColumnCount;
@@ -80,11 +112,10 @@ namespace AutoCompleteDataGridViewWidgets
                     mainDataGridView.CurrentCell = mainDataGridView[cur_.ColumnIndex+1,Math.Max(cur_.RowIndex - 1,0)];
                 }
                 changed = false;
-                mainDataGridView.SelectionMode = DataGridViewSelectionMode.CellSelect;
-
             } else
             {
                 mainDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                if(mainDataGridView.CurrentCell != null)
                 mainDataGridView.EditMode = DataGridViewEditMode.EditOnKeystroke;
             }
         }
@@ -94,14 +125,30 @@ namespace AutoCompleteDataGridViewWidgets
             //debug Information
             Debug.WriteLine($"{MethodBase.GetCurrentMethod().Name},row={mainDataGridView.CurrentCell?.RowIndex},column={mainDataGridView.CurrentCell?.ColumnIndex}");
             //debug Information
-            if(mainDataGridView.CurrentCell != null)
+           
+            if (mainDataGridView.CurrentCell != null)
+            {
+                mainDataGridView.EditMode = DataGridViewEditMode.EditOnEnter;
+                mainDataGridView.SelectionMode = DataGridViewSelectionMode.CellSelect;
                 changed = true;
+            }
+                
         }
 
         private void mainDataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             if (MessageBox.Show($"您確定要刪除第{e.Row.Index+1}列資料嗎？", "詢問", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 e.Cancel = true;
+        }
+
+        private void dataBindingSource_DataSourceChanged(object sender, EventArgs e)
+        {
+            mainDataGridView.DataSource = dataBindingSource.DataSource;
+        }
+
+        private void keyBindingSource_DataSourceChanged(object sender, EventArgs e)
+        {
+            keyValueGridView.DataSource = keyBindingSource.DataSource;
         }
     }
 }
