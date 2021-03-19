@@ -102,7 +102,6 @@
             this.Column5});
             this.keyValueGridView.Location = new System.Drawing.Point(40, 56);
             this.keyValueGridView.Name = "keyValueGridView";
-            this.keyValueGridView.ReadOnly = true;
             this.keyValueGridView.RowTemplate.Height = 24;
             this.keyValueGridView.Size = new System.Drawing.Size(345, 150);
             this.keyValueGridView.TabIndex = 1;
@@ -112,19 +111,16 @@
             // 
             this.Column3.HeaderText = "Column3";
             this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
             // 
             // Column4
             // 
             this.Column4.HeaderText = "Column4";
             this.Column4.Name = "Column4";
-            this.Column4.ReadOnly = true;
             // 
             // Column5
             // 
             this.Column5.HeaderText = "Column5";
             this.Column5.Name = "Column5";
-            this.Column5.ReadOnly = true;
             // 
             // AutoCompleteDataGridView
             // 
@@ -144,6 +140,7 @@
 
         }
         public string primaryKey { get; set; } = "Column";
+        public string autocompleteKey { get; set; } = "Column3";
         public int keyValueHeightScale { get; set; } = 5;
         public int keyValueWidth { get; set; } = 500;
 #endregion

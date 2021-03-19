@@ -51,38 +51,52 @@ namespace AutoCompleteDataGridViewWidgets
             if (mainDataGridView.CurrentCell.OwningColumn.Name == primaryKey)
             {
                 if (!(e.Control is DataGridViewTextBoxEditingControl)) throw new Exception("Primary Key Column's control must be TextBox");
-                var textBox = e.Control as DataGridViewTextBoxEditingControl;
+                var textBox = mainDataGridView.EditingControl as DataGridViewTextBoxEditingControl;
                 if (textBox != null)
                 {
-                    textBox.KeyPress -= TextBox_KeyPress;
                     textBox.TextChanged -= TextBox_TextChanged;
+                    textBox.KeyPress -= TextBox_KeyPress;
                     textBox.TextChanged += TextBox_TextChanged;
                     textBox.KeyPress += TextBox_KeyPress;
                 }
-                keyValueGridView.Visible = true;
                 keyValueGridView.Height = keyValueHeightScale * textBox.Height;
+                textBox = null;
             } else
             {
                 keyValueGridView.Visible = false;
             }
         }
-
-
         private void TextBox_TextChanged(object sender, EventArgs e)
         {
-            var textBox = (TextBox)sender;
-            var filterView = (DataTable)keyValueGridView.DataSource;
-            var view = filterView?.DefaultView;
-            if (view == null) return;
-            view.Sort = "Column3 asc";
-            view.RowFilter = $"Column3 like '%{textBox.Text}%'";
-            keyValueGridView.DataSource = view.ToTable();
+            //debug Information
+            Debug.WriteLine($"{MethodBase.GetCurrentMethod().Name},row={mainDataGridView.CurrentCell?.RowIndex},column={mainDataGridView.CurrentCell.OwningColumn.Name == primaryKey}");
+            //debug Information
+            if (mainDataGridView.CurrentCell.OwningColumn.Name == primaryKey)
+            {
+                keyValueGridView.Visible = true;
+                var textBox = (TextBox)sender;
+                Debug.WriteLine(textBox.Text);
+                var filterView = (DataTable)keyValueGridView.DataSource;
+                var view = filterView?.DefaultView;
+                Debug.WriteLine(view == null);
+                if (view == null) return;
+                view.Sort = $"{autocompleteKey} asc";
+                view.RowFilter = $"{autocompleteKey} like '%{textBox.Text}%'";
+                keyValueGridView.DataSource = view.ToTable();
+            }
         }
-
         private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            Debug.WriteLine(e.KeyChar);
-            
+            if(mainDataGridView.CurrentCell.OwningColumn.Name == primaryKey)
+            {
+                Debug.WriteLine(e.KeyChar);
+                if(e.KeyChar == '*' || e.KeyChar == '?')
+                {
+                    keyValueGridView.Focus();
+                    keyValueGridView.Visible = true;
+                    keyValueGridView.Focus();
+                }
+            }
         }
 
         private void mainDataGridView_SelectionChanged(object sender, EventArgs e)
