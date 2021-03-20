@@ -32,26 +32,18 @@
             this.dataBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.keyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.mainDataGridView = new System.Windows.Forms.DataGridView();
-            this.Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.keyValueGridView = new System.Windows.Forms.DataGridView();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.keyBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mainDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.keyValueGridView)).BeginInit();
             this.SuspendLayout();
-            // 
-            // dataBindingSource
-            // 
-            this.dataBindingSource.DataSourceChanged += new System.EventHandler(this.dataBindingSource_DataSourceChanged);
-            // 
-            // keyBindingSource
-            // 
-            this.keyBindingSource.DataSourceChanged += new System.EventHandler(this.keyBindingSource_DataSourceChanged);
             // 
             // mainDataGridView
             // 
@@ -69,28 +61,11 @@
             this.mainDataGridView.RowTemplate.Height = 24;
             this.mainDataGridView.Size = new System.Drawing.Size(570, 319);
             this.mainDataGridView.TabIndex = 0;
+            this.mainDataGridView.EditModeChanged += new System.EventHandler(this.mainDataGridView_EditModeChanged);
             this.mainDataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.mainDataGridView_CellValueChanged);
             this.mainDataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.mainDataGridView_EditingControlShowing);
             this.mainDataGridView.SelectionChanged += new System.EventHandler(this.mainDataGridView_SelectionChanged);
             this.mainDataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.mainDataGridView_UserDeletingRow);
-            // 
-            // Column
-            // 
-            this.Column.HeaderText = "Column";
-            this.Column.Name = "Column";
-            this.Column.Width = 107;
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "Column1";
-            this.Column1.Name = "Column1";
-            this.Column1.Width = 118;
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "Column2";
-            this.Column2.Name = "Column2";
-            this.Column2.Width = 118;
             // 
             // keyValueGridView
             // 
@@ -102,10 +77,13 @@
             this.Column5});
             this.keyValueGridView.Location = new System.Drawing.Point(40, 56);
             this.keyValueGridView.Name = "keyValueGridView";
+            this.keyValueGridView.ReadOnly = true;
             this.keyValueGridView.RowTemplate.Height = 24;
+            this.keyValueGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.keyValueGridView.Size = new System.Drawing.Size(345, 150);
             this.keyValueGridView.TabIndex = 1;
             this.keyValueGridView.VisibleChanged += new System.EventHandler(this.keyValueGridView_VisibleChanged);
+            this.keyValueGridView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keyValueGridView_KeyDown);
             // 
             // Column3
             // 
@@ -121,6 +99,25 @@
             // 
             this.Column5.HeaderText = "Column5";
             this.Column5.Name = "Column5";
+            // 
+            // Column
+            // 
+            this.Column.HeaderText = "Column";
+            this.Column.Name = "Column";
+            this.Column.Width = 107;
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Column1";
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            this.Column1.Width = 118;
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "Column2";
+            this.Column2.Name = "Column2";
+            this.Column2.Width = 118;
             // 
             // AutoCompleteDataGridView
             // 
@@ -141,6 +138,7 @@
         }
         public string primaryKey { get; set; } = "Column";
         public string autocompleteKey { get; set; } = "Column3";
+        public object[] bindingValue { get; set; } = new object[] { "" };
         public int keyValueHeightScale { get; set; } = 5;
         public int keyValueWidth { get; set; } = 500;
 #endregion
@@ -149,13 +147,13 @@
         public System.Windows.Forms.BindingSource dataBindingSource;
         public System.Windows.Forms.BindingSource keyBindingSource;
 #if DEBUG
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
-        
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+
 #endif
     }
 }

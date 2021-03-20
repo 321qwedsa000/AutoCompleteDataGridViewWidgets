@@ -20,6 +20,18 @@ namespace AutoCompleteDataGridViewWidgets
         {
             InitializeComponent();
             keyValueGridView.Width = Math.Min(mainDataGridView.Width,keyValueWidth);
+            DataTable table = new DataTable();
+            table.Columns.AddRange(new DataColumn[] { new DataColumn("Column3"), new DataColumn("Column4"), new DataColumn("Column5") });
+            table.Rows.Add("Amy", "Abby", "Sandy");
+            table.Rows.Add("Abby", "Amy", "Sandy");
+            table.Rows.Add("Abbz", "Amy", "Sandy");
+            table.Rows.Add("Abba", "Amy", "Sandy");
+            table.Rows.Add("Abbb", "Amy", "Sandy");
+
+            keyBindingSource.DataSource = table;
+            keyValueGridView.DataSource = null;
+            keyValueGridView.Columns.Clear();
+            keyValueGridView.DataSource = keyBindingSource.DataSource;
         }
 
         private void keyValueGridView_VisibleChanged(object sender, EventArgs e)
@@ -82,7 +94,7 @@ namespace AutoCompleteDataGridViewWidgets
                 if (view == null) return;
                 view.Sort = $"{autocompleteKey} asc";
                 view.RowFilter = $"{autocompleteKey} like '%{textBox.Text}%'";
-                keyValueGridView.DataSource = view.ToTable();
+                keyBindingSource.DataSource = view.ToTable();
             }
         }
         private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -90,7 +102,7 @@ namespace AutoCompleteDataGridViewWidgets
             if(mainDataGridView.CurrentCell.OwningColumn.Name == primaryKey)
             {
                 Debug.WriteLine(e.KeyChar);
-                if(e.KeyChar == '*' || e.KeyChar == '?')
+                if(e.KeyChar == '*')
                 {
                     keyValueGridView.Focus();
                     keyValueGridView.Visible = true;
@@ -125,10 +137,10 @@ namespace AutoCompleteDataGridViewWidgets
                 {
                     mainDataGridView.CurrentCell = mainDataGridView[cur_.ColumnIndex+1,Math.Max(cur_.RowIndex - 1,0)];
                 }
-                changed = false;
+                if(!mainDataGridView.CurrentCell.ReadOnly)
+                    changed = false;
             } else
             {
-                mainDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
                 if(mainDataGridView.CurrentCell != null)
                 mainDataGridView.EditMode = DataGridViewEditMode.EditOnKeystroke;
             }
@@ -143,7 +155,6 @@ namespace AutoCompleteDataGridViewWidgets
             if (mainDataGridView.CurrentCell != null)
             {
                 mainDataGridView.EditMode = DataGridViewEditMode.EditOnEnter;
-                mainDataGridView.SelectionMode = DataGridViewSelectionMode.CellSelect;
                 changed = true;
             }
                 
@@ -155,14 +166,31 @@ namespace AutoCompleteDataGridViewWidgets
                 e.Cancel = true;
         }
 
-        private void dataBindingSource_DataSourceChanged(object sender, EventArgs e)
+        private void mainDataGridView_EditModeChanged(object sender, EventArgs e)
         {
-            mainDataGridView.DataSource = dataBindingSource.DataSource;
+            if(mainDataGridView.EditMode == DataGridViewEditMode.EditOnEnter)
+            {
+                mainDataGridView.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            } else
+            {
+                mainDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            }
         }
 
-        private void keyBindingSource_DataSourceChanged(object sender, EventArgs e)
+        private void keyValueGridView_KeyDown(object sender, KeyEventArgs e)
         {
-            keyValueGridView.DataSource = keyBindingSource.DataSource;
+            switch(e.KeyData)
+            {
+                case Keys.Enter:
+                    mainDataGridView.CurrentCell.Value = keyValueGridView.SelectedRows[0].Cells[autocompleteKey].Value;
+                    mainDataGridView.Focus();
+                    keyValueGridView.Visible = false;
+
+                    break;
+                case Keys.Escape:
+
+                    break;
+            }
         }
     }
 }
