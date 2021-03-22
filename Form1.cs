@@ -33,12 +33,18 @@ namespace AutoCompleteDataGridViewWidgets
             builder.Add("Jet OLEDB:Engine Type", 5);
             var catalog = new ADOX.Catalog();
             var table = new ADOX.Table();
-            table.Name = "DataTableSample";
+            table.Name = "DataTableSample1";
             table.Columns.Append("Column");
             table.Columns.Append("Column1");
             table.Columns.Append("Column2");
-            catalog.Create(builder.ConnectionString);
-            catalog.Tables.Append(table);
+            if(!System.IO.File.Exists(builder.DataSource))
+                catalog.Create(builder.ConnectionString);
+            try {
+                catalog.Tables.Append(table);
+            } catch(Exception ex)
+            {
+                MessageBox.Show("Exists");
+            }
             var connection = catalog.ActiveConnection as ADODB.Connection;
             if (connection != null)
                 connection.Close();
