@@ -33,10 +33,16 @@
             // 
             // autoCompleteDataGridView1
             // 
+            this.autoCompleteDataGridView1.autocompleteKey = "Column3";
+            this.autoCompleteDataGridView1.bindingValue = new object[] {
+        ((object)(""))};
             this.autoCompleteDataGridView1.Font = new System.Drawing.Font("新細明體", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.autoCompleteDataGridView1.keyValueHeightScale = 5;
+            this.autoCompleteDataGridView1.keyValueWidth = 500;
             this.autoCompleteDataGridView1.Location = new System.Drawing.Point(16, 24);
             this.autoCompleteDataGridView1.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.autoCompleteDataGridView1.Name = "autoCompleteDataGridView1";
+            this.autoCompleteDataGridView1.primaryKey = "Column";
             this.autoCompleteDataGridView1.Size = new System.Drawing.Size(788, 507);
             this.autoCompleteDataGridView1.TabIndex = 0;
             this.autoCompleteDataGridView1.Load += new System.EventHandler(this.autoCompleteDataGridView1_Load);
@@ -51,6 +57,7 @@
             this.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }
