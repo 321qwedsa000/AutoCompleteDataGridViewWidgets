@@ -188,7 +188,8 @@ namespace AutoCompleteDataGridViewWidgets
 
                     break;
                 case Keys.Escape:
-
+                    mainDataGridView.Focus();
+                    keyValueGridView.Visible = false;
                     break;
             }
         }
